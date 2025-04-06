@@ -1,0 +1,10 @@
+[tool.briefcase]
+project_name = "GoldenBoard"
+bundle = "com.yourname"
+version = "1.0.0"
+description = "Golden Board Game"
+author = "Your Name"
+icon = "icon.icns"
+
+[tool.briefcase.app.goldenboard]
+sources = ["golden_board.py"]
