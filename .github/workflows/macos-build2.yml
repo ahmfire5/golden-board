@@ -1,0 +1,37 @@
+name: Build macOS App
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install py2app pygame
+
+    - name: Create setup.py
+      run: |
+        echo "from setuptools import setup\n\nAPP = ['golden_board.py']\nDATA_FILES = ['icon.ico']\nOPTIONS = {'argv_emulation': True, 'iconfile': 'icon.ico'}\n\nsetup(\n    app=APP,\n    data_files=DATA_FILES,\n    options={'py2app': OPTIONS},\n    setup_requires=['py2app'],\n)" > setup.py
+
+    - name: Build app with py2app
+      run: python setup.py py2app
+
+    - name: Upload built app
+      uses: actions/upload-artifact@v4
+      with:
+        name: GoldenBoard-macOS
+        path: dist/*.app
